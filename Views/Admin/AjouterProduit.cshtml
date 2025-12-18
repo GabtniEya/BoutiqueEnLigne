@@ -1,0 +1,89 @@
+﻿@model BoutiqueEnLigne.Models.Produit
+@{
+    ViewData["Title"] = "Ajouter un Produit";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="mb-4">
+    <a asp-action="Produits" class="btn btn-outline-secondary">← Retour à la liste</a>
+</div>
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">➕ Ajouter un Nouveau Produit</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="AjouterProduit" method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Nom" class="form-label">Nom du produit *</label>
+                        <input asp-for="Nom" class="form-control" placeholder="Ex: Smartphone Galaxy X" />
+                        <span asp-validation-for="Nom" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label">Description *</label>
+                        <textarea asp-for="Description" class="form-control" rows="4"
+                                  placeholder="Description détaillée du produit..."></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Prix" class="form-label">Prix (€) *</label>
+                            <input asp-for="Prix" class="form-control" type="number" step="0.01"
+                                   placeholder="99.99" />
+                            <span asp-validation-for="Prix" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Stock" class="form-label">Stock *</label>
+                            <input asp-for="Stock" class="form-control" type="number"
+                                   placeholder="50" />
+                            <span asp-validation-for="Stock" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="CategorieId" class="form-label">Catégorie *</label>
+                            <select asp-for="CategorieId" class="form-select">
+                                <option value="">-- Sélectionner --</option>
+                                @foreach (var cat in ViewBag.Categories)
+                                {
+                                    <option value="@cat.Id">@cat.Nom</option>
+                                }
+                            </select>
+                            <span asp-validation-for="CategorieId" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="ImageUrl" class="form-label">URL de l'image</label>
+                            <input asp-for="ImageUrl" class="form-control"
+                                   placeholder="/images/produits/monproduit.jpg" />
+                            <small class="text-muted">Ex: /images/produits/phone.jpg</small>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <strong>💡 Astuce :</strong> Placez votre image dans le dossier <code>wwwroot/images/produits/</code>
+                    </div>
+                    <div class="alert alert-info">
+                        <strong>💡 Note :</strong> Les attributs (taille, couleur, etc.) seront ajoutés après la création du produit.
+                    </div>B
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">✅ Ajouter le Produit</button>
+                        <a asp-action="Produits" class="btn btn-outline-secondary">Annuler</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

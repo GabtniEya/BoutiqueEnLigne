@@ -1,0 +1,189 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Panneau Admin</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        body {
+            background-color: #f4f6f9;
+        }
+
+        .admin-navbar {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+            .admin-navbar .navbar-brand {
+                color: white !important;
+                font-weight: 700;
+                font-size: 1.5rem;
+            }
+
+            .admin-navbar .nav-link {
+                color: rgba(255,255,255,0.9) !important;
+                font-weight: 500;
+                transition: all 0.3s;
+                padding: 8px 15px !important;
+                border-radius: 5px;
+            }
+
+                .admin-navbar .nav-link:hover {
+                    background: rgba(255,255,255,0.1);
+                    color: white !important;
+                }
+
+                .admin-navbar .nav-link.active {
+                    background: rgba(255,255,255,0.2);
+                }
+
+        .admin-sidebar {
+            background: white;
+            min-height: calc(100vh - 56px);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+            padding: 20px 0;
+        }
+
+            .admin-sidebar .nav-link {
+                color: #333;
+                padding: 12px 20px;
+                margin: 5px 15px;
+                border-radius: 8px;
+                transition: all 0.3s;
+                font-weight: 500;
+            }
+
+                .admin-sidebar .nav-link:hover {
+                    background: #f0f0f0;
+                    color: #1e3c72;
+                    transform: translateX(5px);
+                }
+
+                .admin-sidebar .nav-link.active {
+                    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+                    color: white;
+                }
+
+        .admin-content {
+            padding: 30px;
+        }
+
+        .page-title {
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg admin-navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/Admin/Dashboard">🛡️ Admin Panel</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="adminNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <span class="nav-link">👤 @Context.Session.GetString("AdminNom")</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-action="Deconnexion">🚪 Déconnexion</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <!-- ✅ NOUVEAU MENU LATÉRAL AMÉLIORÉ -->
+            <nav class="col-md-2 d-md-block admin-sidebar">
+                <div class="position-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Dashboard" ? "active" : "")"
+                               asp-action="Dashboard">
+                                📊 Dashboard
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link @(new[] {"Produits","AjouterProduit","ModifierProduit"}
+                                                               .Contains(ViewContext.RouteData.Values["action"]?.ToString()) ? "active" : "")"
+                               asp-action="Produits">
+                                📦 Produits
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link @(new[] {"Commandes","DetailsCommande"}
+                                                               .Contains(ViewContext.RouteData.Values["action"]?.ToString()) ? "active" : "")"
+                               asp-action="Commandes">
+                                🛒 Commandes
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link @(new[] {"Utilisateurs","DetailsUtilisateur"}
+                                                               .Contains(ViewContext.RouteData.Values["action"]?.ToString()) ? "active" : "")"
+                               asp-action="Utilisateurs">
+                                👥 Utilisateurs
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Categories" ? "active" : "")"
+                               asp-action="Categories">
+                                🏷️ Catégories
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "CodesPromo" ||
+                                                        ViewContext.RouteData.Values["action"]?.ToString() == "AjouterCodePromo" ? "active" : "")"
+                               asp-action="CodesPromo">
+                                🎁 Codes Promo
+                            </a>
+                        </li>
+                    </ul>
+
+                    <hr class="my-4" />
+
+                    <div class="px-3">
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary btn-sm w-100 mb-2">
+                            🏠 Retour au Site
+                        </a>
+                    </div>
+                </div>
+            </nav>
+            <!-- ⚡ FIN DU MENU LATÉRAL -->
+
+            <main class="col-md-10 ms-sm-auto admin-content">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        @TempData["Success"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @TempData["Error"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

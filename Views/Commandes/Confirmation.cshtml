@@ -1,0 +1,98 @@
+﻿@model BoutiqueEnLigne.Models.Commande
+@{
+    ViewData["Title"] = "Commande confirmée";
+}
+
+<div class="text-center mb-5">
+    <div class="mb-4">
+        <span style="font-size: 100px;">✅</span>
+    </div>
+    <h1 class="text-success">Commande confirmée !</h1>
+    <p class="lead">Merci pour votre commande</p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-body">
+                <h4 class="card-title mb-4">Détails de votre commande</h4>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Numéro de commande :</strong>
+                        <p class="text-primary fs-5">@Model.NumeroCommande</p>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <strong>Date :</strong>
+                        <p>@Model.DateCommande.ToString("dd/MM/yyyy à HH:mm")</p>
+                    </div>
+                </div>
+
+                <hr />
+
+                <h5 class="mb-3">📦 Produits commandés</h5>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Produit</th>
+                            <th class="text-center">Quantité</th>
+                            <th class="text-end">Prix unitaire</th>
+                            <th class="text-end">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var ligne in Model.LignesCommande)
+                        {
+                            <tr>
+                                <td>@ligne.Produit.Nom</td>
+                                <td class="text-center">@ligne.Quantite</td>
+                                <td class="text-end">@ligne.PrixUnitaire.ToString("C")</td>
+                                <td class="text-end">@((ligne.PrixUnitaire * ligne.Quantite).ToString("C"))</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-end"><strong>Total :</strong></td>
+                            <td class="text-end">
+                                <h5 class="text-primary mb-0">@Model.MontantTotal.ToString("C")</h5>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <hr />
+
+                <h5 class="mb-3">📍 Adresse de livraison</h5>
+                <address>
+                    @Model.AdresseLivraison<br />
+                    @Model.CodePostalLivraison @Model.VilleLivraison<br />
+                    Téléphone : @Model.TelephoneLivraison
+                </address>
+
+                <hr />
+
+                <div class="alert alert-info">
+                    <h6>ℹ️ Informations importantes :</h6>
+                    <ul class="mb-0">
+                        <li>Vous recevrez un email de confirmation à l'adresse enregistrée</li>
+                        <li>Votre commande sera expédiée sous 24-48h</li>
+                        <li>Vous pouvez suivre votre commande dans "Mes Commandes"</li>
+                        <li>En cas de question, contactez notre service client</li>
+                    </ul>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a asp-controller="Compte" asp-action="MesCommandes"
+                       class="btn btn-primary me-2">
+                        Voir mes commandes
+                    </a>
+                    <a asp-controller="Produits" asp-action="Index"
+                       class="btn btn-outline-secondary">
+                        Continuer mes achats
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

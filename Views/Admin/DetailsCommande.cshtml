@@ -1,0 +1,132 @@
+﻿@model BoutiqueEnLigne.Models.Commande
+@{
+    ViewData["Title"] = "Détails de la Commande";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="mb-4">
+    <a asp-action="Commandes" class="btn btn-outline-secondary">← Retour aux commandes</a>
+</div>
+
+<h1 class="page-title">📋 Commande #@Model.NumeroCommande</h1>
+
+<div class="row">
+    <!-- Informations générales -->
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Informations de la Commande</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Numéro de commande :</strong><br />
+                        <span class="text-primary fs-5">@Model.NumeroCommande</span>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Date de commande :</strong><br />
+                        @Model.DateCommande.ToString("dd/MM/yyyy à HH:mm")
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Statut actuel :</strong><br />
+                        @if (Model.StatutCommande == "En cours")
+                        {
+                            <span class="badge bg-warning text-dark fs-6">@Model.StatutCommande</span>
+                        }
+                        else if (Model.StatutCommande == "Expédiée")
+                        {
+                            <span class="badge bg-info fs-6">@Model.StatutCommande</span>
+                        }
+                        else if (Model.StatutCommande == "Livrée")
+                        {
+                            <span class="badge bg-success fs-6">@Model.StatutCommande</span>
+                        }
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Montant total :</strong><br />
+                        <span class="text-success fs-4">@Model.MontantTotal.ToString("C")</span>
+                    </div>
+                </div>
+
+                <hr />
+
+                <h6 class="mb-3">Produits commandés :</h6>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Produit</th>
+                            <th>Prix unitaire</th>
+                            <th>Quantité</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var ligne in Model.LignesCommande)
+                        {
+                            <tr>
+                                <td>@ligne.Produit.Nom</td>
+                                <td>@ligne.PrixUnitaire.ToString("C")</td>
+                                <td>@ligne.Quantite</td>
+                                <td><strong>@((ligne.PrixUnitaire * ligne.Quantite).ToString("C"))</strong></td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-end"><strong>Total :</strong></td>
+                            <td><strong class="text-success">@Model.MontantTotal.ToString("C")</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Client et livraison -->
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">👤 Client</h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-2"><strong>@Model.Utilisateur.Prenom @Model.Utilisateur.Nom</strong></p>
+                <p class="mb-2">📧 @Model.Utilisateur.Email</p>
+                <p class="mb-0">📞 @Model.TelephoneLivraison</p>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">📍 Livraison</h5>
+            </div>
+            <div class="card-body">
+                <address>
+                    @Model.AdresseLivraison<br />
+                    @Model.CodePostalLivraison @Model.VilleLivraison
+                </address>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-warning">
+                <h5 class="mb-0">⚙️ Changer le Statut</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="ChangerStatutCommande" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <div class="mb-3">
+                        <select name="statut" class="form-select">
+                            <option value="En cours" selected="@(Model.StatutCommande == "En cours")">En cours</option>
+                            <option value="Expédiée" selected="@(Model.StatutCommande == "Expédiée")">Expédiée</option>
+                            <option value="Livrée" selected="@(Model.StatutCommande == "Livrée")">Livrée</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-warning w-100">Mettre à jour</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

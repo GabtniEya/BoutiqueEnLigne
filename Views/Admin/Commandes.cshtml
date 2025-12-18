@@ -1,0 +1,134 @@
+﻿@model IEnumerable<BoutiqueEnLigne.Models.Commande>
+@{
+    ViewData["Title"] = "Gestion des Commandes";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="page-title">🛒 Gestion des Commandes</h1>
+</div>
+
+<!-- Filtres -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-5">
+                <label class="form-label">Rechercher</label>
+                <input type="text" name="recherche" class="form-control"
+                       placeholder="N° commande, nom client..." value="@Context.Request.Query["recherche"]" />
+            </div>
+            <div class="col-md-5">
+                <label class="form-label">Statut</label>
+                <select name="statut" class="form-select">
+                    <option value="">Tous les statuts</option>
+                    <option value="En cours" selected="@(Context.Request.Query["statut"] == "En cours")">En cours</option>
+                    <option value="Expédiée" selected="@(Context.Request.Query["statut"] == "Expédiée")">Expédiée</option>
+                    <option value="Livrée" selected="@(Context.Request.Query["statut"] == "Livrée")">Livrée</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">🔍 Filtrer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Statistiques rapides -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h6>Total Commandes</h6>
+                <h3>@Model.Count()</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <h6>En Cours</h6>
+                <h3>@Model.Count(c => c.StatutCommande == "En cours")</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h6>Montant Total</h6>
+                <h3>@Model.Sum(c => c.MontantTotal).ToString("C")</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tableau des commandes -->
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>N° Commande</th>
+                        <th>Client</th>
+                        <th>Date</th>
+                        <th>Produits</th>
+                        <th>Montant</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var commande in Model)
+                    {
+                        <tr>
+                            <td><strong>@commande.NumeroCommande</strong></td>
+                            <td>
+                                @commande.Utilisateur.Prenom @commande.Utilisateur.Nom<br />
+                                <small class="text-muted">@commande.Utilisateur.Email</small>
+                            </td>
+                            <td>
+                                @commande.DateCommande.ToString("dd/MM/yyyy")<br />
+                                <small class="text-muted">@commande.DateCommande.ToString("HH:mm")</small>
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary">@commande.LignesCommande.Count produit(s)</span>
+                            </td>
+                            <td><strong class="text-success">@commande.MontantTotal.ToString("C")</strong></td>
+                            <td>
+                                @if (commande.StatutCommande == "En cours")
+                                {
+                                    <span class="badge bg-warning text-dark">@commande.StatutCommande</span>
+                                }
+                                else if (commande.StatutCommande == "Expédiée")
+                                {
+                                    <span class="badge bg-info">@commande.StatutCommande</span>
+                                }
+                                else if (commande.StatutCommande == "Livrée")
+                                {
+                                    <span class="badge bg-success">@commande.StatutCommande</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-primary">@commande.StatutCommande</span>
+                                }
+                            </td>
+                            <td>
+                                <a asp-action="DetailsCommande" asp-route-id="@commande.Id"
+                                   class="btn btn-sm btn-primary" title="Détails">
+                                    👁️
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info mt-3">
+        Aucune commande trouvée.
+    </div>
+}

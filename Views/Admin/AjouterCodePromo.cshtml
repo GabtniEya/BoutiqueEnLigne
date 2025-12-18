@@ -1,0 +1,96 @@
+﻿@model BoutiqueEnLigne.Models.CodePromo
+@{
+    ViewData["Title"] = "Créer un Code Promo";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="mb-4">
+    <a asp-action="CodesPromo" class="btn btn-outline-secondary">← Retour</a>
+</div>
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">🎁 Créer un Code Promo</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="AjouterCodePromo" method="post">
+                    <div asp-validation-summary="All" class="alert alert-danger"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Code" class="form-label">Code Promo *</label>
+                        <input asp-for="Code" class="form-control" placeholder="NOEL2024"
+                               style="text-transform: uppercase;" />
+                        <span asp-validation-for="Code" class="text-danger"></span>
+                        <small class="text-muted">Sera converti en majuscules</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label">Description *</label>
+                        <textarea asp-for="Description" class="form-control" rows="2"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Pourcentage" class="form-label">Pourcentage (%)</label>
+                            <input asp-for="Pourcentage" class="form-control" type="number" step="0.01" />
+                            <small class="text-muted">Ex: 10 pour 10%</small>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="MontantFixe" class="form-label">OU Montant Fixe (€)</label>
+                            <input asp-for="MontantFixe" class="form-control" type="number" step="0.01" />
+                            <small class="text-muted">Ex: 5 pour 5€</small>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <strong>💡 Note :</strong> Remplissez soit le pourcentage, soit le montant fixe (pas les deux).
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="DateDebut" class="form-label">Date de début *</label>
+                            <input asp-for="DateDebut" class="form-control" type="datetime-local" />
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="DateFin" class="form-label">Date de fin *</label>
+                            <input asp-for="DateFin" class="form-control" type="datetime-local" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="UtilisationsMax" class="form-label">Utilisations Maximum</label>
+                            <input asp-for="UtilisationsMax" class="form-control" type="number" />
+                            <small class="text-muted">Laisser vide pour illimité</small>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="MontantMinimum" class="form-label">Montant Minimum (€)</label>
+                            <input asp-for="MontantMinimum" class="form-control" type="number" step="0.01" />
+                            <small class="text-muted">Laisser vide si aucun minimum</small>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input asp-for="Actif" class="form-check-input" type="checkbox" checked />
+                        <label asp-for="Actif" class="form-check-label">Code actif</label>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">✅ Créer le Code Promo</button>
+                        <a asp-action="CodesPromo" class="btn btn-outline-secondary">Annuler</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

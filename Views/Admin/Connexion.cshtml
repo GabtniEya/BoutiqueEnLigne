@@ -1,0 +1,162 @@
+﻿@model BoutiqueEnLigne.ViewModels.AdminConnexionViewModel
+@{
+    ViewData["Title"] = "Connexion Admin";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .admin-login-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            overflow: hidden;
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 50px 30px;
+            text-align: center;
+        }
+
+        .admin-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @@keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .admin-header h2 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 2rem;
+        }
+
+        .admin-body {
+            padding: 40px;
+        }
+
+        .form-control {
+            padding: 14px 18px;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            font-size: 1rem;
+        }
+
+            .form-control:focus {
+                border-color: #1e3c72;
+                box-shadow: 0 0 0 0.2rem rgba(30, 60, 114, 0.25);
+            }
+
+        .btn-admin {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border: none;
+            color: white;
+            padding: 15px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+            .btn-admin:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 15px 30px rgba(30, 60, 114, 0.4);
+                color: white;
+            }
+
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+
+        .badge-info {
+            background: #17a2b8;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-login-card">
+        <div class="admin-header">
+            <div class="admin-icon">🔐</div>
+            <h2>Panneau Admin</h2>
+            <p class="mb-0">Connexion administrateur</p>
+        </div>
+
+        <div class="admin-body">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success mb-3">@TempData["Success"]</div>
+            }
+
+            <form asp-action="Connexion" method="post">
+                <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
+
+                <div class="mb-4">
+                    <label asp-for="Email" class="form-label fw-bold">Email Administrateur</label>
+                    <input asp-for="Email" class="form-control" type="email" placeholder="admin@boutique.com" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="MotDePasse" class="form-label fw-bold">Mot de passe</label>
+                    <input asp-for="MotDePasse" class="form-control" type="password" placeholder="••••••••" />
+                    <span asp-validation-for="MotDePasse" class="text-danger"></span>
+                </div>
+
+                <div class="d-grid gap-2 mb-4">
+                    <button type="submit" class="btn btn-admin">Se connecter</button>
+                </div>
+
+                <div class="text-center">
+                    <span class="badge badge-info">
+                        🛡️ Zone sécurisée - Accès réservé aux administrateurs
+                    </span>
+                </div>
+            </form>
+
+            <hr class="my-4" />
+
+            <div class="text-center">
+                <a asp-controller="Home" asp-action="Index" class="text-muted text-decoration-none">
+                    ← Retour au site
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>

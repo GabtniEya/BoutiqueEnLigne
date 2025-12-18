@@ -1,0 +1,137 @@
+﻿@model IEnumerable<BoutiqueEnLigne.Models.Produit>
+@{
+    ViewData["Title"] = "Gestion des Produits";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="page-title">📦 Gestion des Produits</h1>
+    <a asp-action="AjouterProduit" class="btn btn-primary">
+        ➕ Ajouter un Produit
+    </a>
+</div>
+
+<!-- Filtres -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">Rechercher</label>
+                <input type="text" name="recherche" class="form-control"
+                       placeholder="Nom ou description..." value="@Context.Request.Query["recherche"]" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Catégorie</label>
+                <select name="categorieId" class="form-select">
+                    <option value="">Toutes les catégories</option>
+                    @foreach (var cat in ViewBag.Categories)
+                    {
+                        <option value="@cat.Id" selected="@(Context.Request.Query["categorieId"] == cat.Id.ToString())">
+                            @cat.Nom
+                        </option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">🔍 Filtrer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Tableau des produits -->
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Image</th>
+                        <th>Nom</th>
+                        <th>Catégorie</th>
+                        <th>Prix</th>
+                        <th>Stock</th>
+                        <th>Vues</th>
+                        <th>Date Ajout</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var produit in Model)
+                    {
+                        <tr>
+                            <td>
+                                @if (!string.IsNullOrEmpty(produit.ImageUrl))
+                                {
+                                    <img src="@produit.ImageUrl" alt="@produit.Nom"
+                                         style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;" />
+                                }
+                                else
+                                {
+                                    <div style="width: 50px; height: 50px; background: #f0f0f0; border-radius: 5px; display: flex; align-items: center; justify-content: center;">
+                                        📦
+                                    </div>
+                                }
+                            </td>
+                            <td>
+                                <strong>@produit.Nom</strong><br />
+                                <small class="text-muted">@(produit.Description.Length > 50 ? produit.Description.Substring(0, 50) + "..." : produit.Description)</small>
+                            </td>
+                            <td><span class="badge bg-secondary">@produit.Categorie.Nom</span></td>
+                            <td><strong>@produit.Prix.ToString("C")</strong></td>
+                            <td>
+                                @if (produit.Stock == 0)
+                                {
+                                    <span class="badge bg-danger">Rupture</span>
+                                }
+                                else if (produit.Stock < 10)
+                                {
+                                    <span class="badge bg-warning text-dark">@produit.Stock</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">@produit.Stock</span>
+                                }
+                            </td>
+                            <td>👁️ @produit.NombreVues</td>
+                            <td>@produit.DateAjout.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                <a asp-action="ModifierProduit" asp-route-id="@produit.Id"
+                                   class="btn btn-sm btn-warning" title="Modifier">
+                                    ✏️
+                                </a>
+                                <button type="button" class="btn btn-sm btn-danger"
+                                        onclick="confirmerSuppression(@produit.Id, '@produit.Nom')" title="Supprimer">
+                                    🗑️
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info mt-3">
+        Aucun produit trouvé.
+    </div>
+}
+
+<!-- Formulaire caché pour suppression -->
+<form id="formSuppression" asp-action="SupprimerProduit" method="post" style="display:none;">
+    <input type="hidden" id="produitIdSuppr" name="id" />
+</form>
+
+@section Scripts {
+    <script>
+        function confirmerSuppression(id, nom) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer le produit "' + nom + '" ?')) {
+                document.getElementById('produitIdSuppr').value = id;
+                document.getElementById('formSuppression').submit();
+            }
+        }
+    </script>
+}

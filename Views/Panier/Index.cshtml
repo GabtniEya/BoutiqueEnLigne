@@ -1,0 +1,141 @@
+﻿@model BoutiqueEnLigne.ViewModels.PanierViewModel
+@{
+    ViewData["Title"] = "Mon Panier";
+}
+
+<h2>🛒 Mon Panier</h2>
+<hr />
+
+@if (!Model.Items.Any())
+{
+    <div class="alert alert-info text-center">
+        <h4>Votre panier est vide</h4>
+        <p>Découvrez nos produits et commencez vos achats !</p>
+        <a asp-controller="Produits" asp-action="Index" class="btn btn-primary mt-3">
+            Voir nos produits
+        </a>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    @foreach (var item in Model.Items)
+                    {
+                        <div class="row mb-3 pb-3 border-bottom">
+                            <div class="col-md-2">
+                                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                {
+                                    <img src="@item.ImageUrl" alt="@item.NomProduit"
+                                         style="height: 80px; width: 100%; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <div class="bg-light d-flex align-items-center justify-content-center"
+                                         style="height: 80px;">
+                                        <span style="font-size: 40px;">📦</span>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="col-md-4">
+                                <h6>@item.NomProduit</h6>
+                                <p class="text-muted mb-0">Prix unitaire : @item.Prix.ToString("C")</p>
+                            </div>
+
+                            <div class="col-md-3">
+                                <form asp-action="Modifier" method="post" class="d-inline">
+                                    <input type="hidden" name="produitId" value="@item.ProduitId" />
+                                    <div class="input-group input-group-sm">
+                                        <button type="submit" name="quantite" value="@(item.Quantite - 1)"
+                                                class="btn btn-outline-secondary">
+                                            -
+                                        </button>
+                                        <input type="text" class="form-control text-center"
+                                               value="@item.Quantite" readonly style="max-width: 60px;" />
+                                        <button type="submit" name="quantite" value="@(item.Quantite + 1)"
+                                                class="btn btn-outline-secondary">
+                                            +
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="col-md-2 text-end">
+                                <strong>@item.SousTotal.ToString("C")</strong>
+                            </div>
+
+                            <div class="col-md-1 text-end">
+                                <form asp-action="Supprimer" method="post">
+                                    <input type="hidden" name="produitId" value="@item.ProduitId" />
+                                    <button type="submit" class="btn btn-sm btn-danger"
+                                            onclick="return confirm('Voulez-vous vraiment supprimer ce produit ?')">
+                                        🗑️
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <a asp-controller="Produits" asp-action="Index" class="btn btn-outline-secondary">
+                    ← Continuer mes achats
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Résumé de la commande</h5>
+                    <hr />
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Sous-total (@Model.Items.Count produit(s))</span>
+                        <strong>@Model.Total.ToString("C")</strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Livraison</span>
+                        <strong class="text-success">Gratuite</strong>
+                    </div>
+
+                    <hr />
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <h5>Total</h5>
+                        <h5 class="text-primary">@Model.Total.ToString("C")</h5>
+                    </div>
+
+                    <a asp-controller="Commandes" asp-action="Validation"
+                       class="btn btn-success w-100 btn-lg">
+                        Passer la commande
+                    </a>
+
+                    <div class="mt-3 text-center">
+                        <small class="text-muted">
+                            <i>✅ Paiement sécurisé</i><br />
+                            <i>📦 Livraison sous 48h</i>
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h6>💡 Avantages</h6>
+                    <ul class="list-unstyled">
+                        <li>✓ Livraison gratuite</li>
+                        <li>✓ Retour sous 30 jours</li>
+                        <li>✓ Garantie 2 ans</li>
+                        <li>✓ Service client 7j/7</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}

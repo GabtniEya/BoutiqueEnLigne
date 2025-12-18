@@ -1,0 +1,28 @@
+﻿@model IEnumerable<BoutiqueEnLigne.Models.Categorie>
+@{
+    ViewData["Title"] = "Catégories";
+    Layout = "_LayoutAdmin";
+}
+
+<h1 class="page-title">🏷️ Catégories</h1>
+
+<div class="row">
+    @foreach (var categorie in Model)
+    {
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4>@categorie.Nom</h4>
+                    <p class="text-muted">@categorie.Description</p>
+                    <hr />
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-primary">@categorie.Produits.Count produit(s)</span>
+                        <a asp-action="Produits" asp-route-categorieId="@categorie.Id" class="btn btn-sm btn-outline-primary">
+                            Voir les produits
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

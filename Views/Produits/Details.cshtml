@@ -1,0 +1,127 @@
+﻿@using System.IO
+@model BoutiqueEnLigne.Models.Produit
+@{
+    ViewData["Title"] = Model.Nom;
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Accueil</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Produits</a></li>
+        <li class="breadcrumb-item active">@Model.Nom</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-md-5">
+        <div class="card">
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <img src="@Model.ImageUrl" class="card-body img-fluid" alt="@Model.Nom"
+                     style="height: 400px; width: 100%; object-fit: contain; background-color: #f8f9fa;" />
+            }
+            else
+            {
+                <div class="card-body bg-light d-flex align-items-center justify-content-center"
+                     style="height: 400px;">
+                    <span style="font-size: 150px;">📦</span>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="col-md-7">
+        <h2>@Model.Nom</h2>
+        <p class="text-muted">
+            <span class="badge bg-secondary">@Model.Categorie.Nom</span>
+            <span class="ms-2">👁️ @Model.NombreVues vues</span>
+        </p>
+        <hr />
+
+        <h3 class="text-primary">@Model.Prix.ToString("C")</h3>
+
+        <div class="my-3">
+            @if (Model.Stock > 0)
+            {
+                <span class="badge bg-success fs-6">✅ En stock (@Model.Stock disponibles)</span>
+            }
+            else
+            {
+                <span class="badge bg-danger fs-6">❌ Rupture de stock</span>
+            }
+        </div>
+
+        <h5 class="mt-4">Description</h5>
+        <p>@Model.Description</p>
+
+        @if (Model.Stock > 0)
+        {
+            <form asp-controller="Panier" asp-action="Ajouter" method="post" class="mt-4">
+                <input type="hidden" name="produitId" value="@Model.Id" />
+
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Quantité</label>
+                        <input type="number" name="quantite" value="1" min="1"
+                               max="@Model.Stock" class="form-control" />
+                    </div>
+
+                    <div class="col-md-9">
+                        <label class="form-label">&nbsp;</label>
+                        <button type="submit" class="btn btn-success btn-lg w-100">
+                            🛒 Ajouter au panier
+                        </button>
+                    </div>
+                </div>
+            </form>
+        }
+        else
+        {
+            <div class="alert alert-warning mt-4">
+                Ce produit n'est actuellement pas disponible.
+            </div>
+        }
+
+        <div class="mt-4">
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                ← Retour aux produits
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-12">
+        <h4>Informations supplémentaires</h4>
+        <hr />
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <th style="width: 200px;">Catégorie</th>
+                    <td>@Model.Categorie.Nom</td>
+                </tr>
+                <tr>
+                    <th>Prix</th>
+                    <td>@Model.Prix.ToString("C")</td>
+                </tr>
+                <tr>
+                    <th>Disponibilité</th>
+                    <td>
+                        @if (Model.Stock > 0)
+                        {
+                            <span class="text-success">En stock (@Model.Stock unités)</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">Rupture de stock</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th>Date d'ajout</th>
+                    <td>@Model.DateAjout.ToString("dd/MM/yyyy")</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

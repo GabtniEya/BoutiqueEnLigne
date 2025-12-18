@@ -1,0 +1,54 @@
+﻿@model BoutiqueEnLigne.Models.Utilisateur
+@{
+    ViewData["Title"] = "Mon Profil";
+}
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h2>👤 Mon Profil</h2>
+        <hr />
+
+        <div class="card">
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Nom complet :</strong></div>
+                    <div class="col-md-8">@Model.Prenom @Model.Nom</div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Email :</strong></div>
+                    <div class="col-md-8">@Model.Email</div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Téléphone :</strong></div>
+                    <div class="col-md-8">@(Model.Telephone ?? "Non renseigné")</div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Adresse :</strong></div>
+                    <div class="col-md-8">@(Model.Adresse ?? "Non renseignée")</div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Ville :</strong></div>
+                    <div class="col-md-8">@(Model.Ville ?? "Non renseignée")</div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Code Postal :</strong></div>
+                    <div class="col-md-8">@(Model.CodePostal ?? "Non renseigné")</div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Membre depuis :</strong></div>
+                    <div class="col-md-8">@Model.DateInscription.ToString("dd/MM/yyyy")</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-3">
+            <a asp-action="MesCommandes" class="btn btn-primary">📦 Mes Commandes</a>
+        </div>
+    </div>
+</div>

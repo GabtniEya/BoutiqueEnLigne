@@ -1,0 +1,363 @@
+/* Styles globaux */
+html {
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+body {
+    margin-bottom: 60px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* Header et Navigation */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+/* Footer */
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px;
+    background-color: #f8f9fa;
+}
+
+/* Cards */
+.card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: none;
+    border-radius: 10px;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 15px rgba(0,0,0,.2);
+    }
+
+.card-img-top {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+/* Boutons */
+.btn {
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+    .btn-primary:hover {
+        background-color: #0b5ed7;
+        border-color: #0a58ca;
+        transform: scale(1.05);
+    }
+
+.btn-success {
+    background-color: #198754;
+    border-color: #198754;
+}
+
+    .btn-success:hover {
+        background-color: #157347;
+        border-color: #146c43;
+        transform: scale(1.05);
+    }
+
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+    .btn-danger:hover {
+        background-color: #bb2d3b;
+        border-color: #b02a37;
+    }
+
+/* Formulaires */
+.form-control, .form-select {
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    padding: 10px;
+}
+
+    .form-control:focus, .form-select:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+
+.form-label {
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: #495057;
+}
+
+/* Alertes */
+.alert {
+    border-radius: 8px;
+    border: none;
+    padding: 15px 20px;
+}
+
+.alert-success {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+.alert-info {
+    background-color: #cfe2ff;
+    color: #084298;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    color: #664d03;
+}
+
+/* Badges */
+.badge {
+    padding: 8px 12px;
+    font-weight: 500;
+    border-radius: 5px;
+}
+
+/* Pagination */
+.pagination {
+    margin-top: 30px;
+}
+
+.page-link {
+    color: #0d6efd;
+    border-radius: 5px;
+    margin: 0 3px;
+}
+
+.page-item.active .page-link {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+/* Tables */
+.table {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+    .table thead {
+        background-color: #f8f9fa;
+    }
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, .02);
+}
+
+/* Panier */
+.input-group-sm .btn {
+    padding: 4px 12px;
+}
+
+/* Produits */
+.card-title {
+    color: #212529;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.card-text {
+    color: #6c757d;
+    font-size: 0.95rem;
+}
+
+/* Prix */
+.text-primary {
+    color: #0d6efd !important;
+    font-weight: bold;
+}
+
+/* Images produits */
+.card-img-top {
+    object-fit: cover;
+}
+
+/* Shadow */
+.shadow-sm {
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important;
+}
+
+.shadow {
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    background-color: #e9ecef;
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 20px;
+    }
+
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+
+    h1, h2 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card, .alert {
+    animation: fadeIn 0.5s ease-in;
+}
+
+/* Page d'accueil */
+.display-4 {
+    font-weight: 700;
+    color: #212529;
+}
+
+.lead {
+    font-size: 1.25rem;
+    color: #6c757d;
+}
+
+/* Icônes emoji style */
+h2, h3, h4, h5 {
+    color: #212529;
+}
+
+/* Hover effects pour liens */
+a {
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+    a:hover {
+        color: #0b5ed7;
+    }
+
+/* Card footer */
+.card-footer {
+    border-top: 1px solid rgba(0,0,0,.125);
+}
+
+/* Input group */
+.input-group {
+    box-shadow: 0 1px 3px rgba(0,0,0,.1);
+    border-radius: 5px;
+}
+
+/* Profil utilisateur */
+.row.mb-3 {
+    padding: 10px 0;
+}
+
+/* Confirmation commande */
+address {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    border-left: 4px solid #0d6efd;
+}
+
+/* Liste des commandes */
+.card-header {
+    font-weight: 600;
+}
+
+/* Espacement */
+.mb-4 {
+    margin-bottom: 1.5rem !important;
+}
+
+.mt-4 {
+    margin-top: 1.5rem !important;
+}
+
+.pt-4 {
+    padding-top: 1.5rem !important;
+}
+
+.pb-4 {
+    padding-bottom: 1.5rem !important;
+}
+/* Filtres sidebar */
+.filter-sidebar {
+    position: sticky;
+    top: 20px;
+}
+
+.filter-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 3px;
+    background: #e9ecef;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+    .filter-badge:hover {
+        background: #667eea;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .filter-badge.active {
+        background: #667eea;
+        color: white;
+    }
+
+/* Badges d'attributs sur les cartes produits */
+.attribute-badge {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    margin: 2px;
+    border: 1px solid #dee2e6;
+    background: #f8f9fa;
+    border-radius: 10px;
+}

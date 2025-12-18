@@ -1,0 +1,102 @@
+﻿@model IEnumerable<BoutiqueEnLigne.Models.Utilisateur>
+@{
+    ViewData["Title"] = "Gestion des Utilisateurs";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="page-title">👥 Gestion des Utilisateurs</h1>
+</div>
+
+<!-- Filtres -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-10">
+                <label class="form-label">Rechercher</label>
+                <input type="text" name="recherche" class="form-control"
+                       placeholder="Nom, prénom ou email..." value="@Context.Request.Query["recherche"]" />
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">🔍 Rechercher</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Statistiques -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h6>Total Utilisateurs</h6>
+                <h3>@Model.Count()</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h6>Avec Commandes</h6>
+                <h3>@Model.Count(u => u.Commandes.Any())</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h6>Total Commandes</h6>
+                <h3>@Model.Sum(u => u.Commandes.Count)</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tableau des utilisateurs -->
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Nom</th>
+                        <th>Email</th>
+                        <th>Téléphone</th>
+                        <th>Ville</th>
+                        <th>Date Inscription</th>
+                        <th>Commandes</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var utilisateur in Model)
+                    {
+                        <tr>
+                            <td><strong>@utilisateur.Prenom @utilisateur.Nom</strong></td>
+                            <td>@utilisateur.Email</td>
+                            <td>@(utilisateur.Telephone ?? "-")</td>
+                            <td>@(utilisateur.Ville ?? "-")</td>
+                            <td>@utilisateur.DateInscription.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                <span class="badge bg-primary">@utilisateur.Commandes.Count commande(s)</span>
+                            </td>
+                            <td>
+                                <a asp-action="DetailsUtilisateur" asp-route-id="@utilisateur.Id"
+                                   class="btn btn-sm btn-info" title="Détails">
+                                    👁️
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info mt-3">
+        Aucun utilisateur trouvé.
+    </div>
+}

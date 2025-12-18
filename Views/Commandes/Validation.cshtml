@@ -1,0 +1,206 @@
+﻿@model BoutiqueEnLigne.ViewModels.CommandeViewModel
+@{
+    ViewData["Title"] = "Validation de commande";
+}
+
+<h2>📋 Validation de votre commande</h2>
+<hr />
+
+<form asp-action="Confirmer" method="post">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">📍 Adresse de livraison</h5>
+                </div>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="AdresseLivraison" class="form-label">Adresse *</label>
+                        <input asp-for="AdresseLivraison" class="form-control" />
+                        <span asp-validation-for="AdresseLivraison" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <label asp-for="VilleLivraison" class="form-label">Ville *</label>
+                            <input asp-for="VilleLivraison" class="form-control" />
+                            <span asp-validation-for="VilleLivraison" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label asp-for="CodePostalLivraison" class="form-label">Code Postal *</label>
+                            <input asp-for="CodePostalLivraison" class="form-control" />
+                            <span asp-validation-for="CodePostalLivraison" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="TelephoneLivraison" class="form-label">Téléphone *</label>
+                        <input asp-for="TelephoneLivraison" class="form-control" />
+                        <span asp-validation-for="TelephoneLivraison" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">📦 Récapitulatif des produits</h5>
+                </div>
+                <div class="card-body">
+                    @foreach (var item in Model.Items)
+                    {
+                        <div class="row mb-2 pb-2 border-bottom">
+                            <div class="col-md-6">
+                                <strong>@item.NomProduit</strong>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                x @item.Quantite
+                            </div>
+                            <div class="col-md-2 text-end">
+                                @item.Prix.ToString("C")
+                            </div>
+                            <div class="col-md-2 text-end">
+                                <strong>@item.SousTotal.ToString("C")</strong>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Code Promo -->
+            <div class="card mt-3">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">🎁 Code Promo</h5>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.CodePromo))
+                    {
+                        <div class="alert alert-success d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>✅ Code appliqué : @Model.CodePromo</strong><br />
+                                <small>Réduction : -@Model.MontantReduction.ToString("C")</small>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-danger" onclick="retirerCodePromo()">
+                                ✕ Retirer
+                            </button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="input-group">
+                            <input type="text" id="codePromoInput" class="form-control"
+                                   placeholder="Entrez votre code promo" />
+                            <button class="btn btn-success" type="button" onclick="appliquerCodePromo()">
+                                Appliquer
+                            </button>
+                        </div>
+                        <div id="messageCodePromo" class="mt-2"></div>
+
+                        <div class="mt-3">
+                            <small class="text-muted">
+                                💡 <strong>Codes disponibles :</strong> BIENVENUE10, PROMO5EUR, MEGA20
+                            </small>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title">💳 Récapitulatif</h5>
+                    <hr />
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Sous-total</span>
+                        <strong id="sousTotal">@Model.MontantAvantReduction.ToString("C")</strong>
+                    </div>
+
+                    @if (Model.MontantReduction > 0)
+                    {
+                        <div class="d-flex justify-content-between mb-2 text-success">
+                            <span>🎁 Réduction (@Model.CodePromo)</span>
+                            <strong id="montantReduction">-@Model.MontantReduction.ToString("C")</strong>
+                        </div>
+                    }
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Frais de livraison</span>
+                        <strong class="text-success">Gratuit</strong>
+                    </div>
+
+                    <hr />
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <h5>Total à payer</h5>
+                        <h4 class="text-primary" id="totalFinal">@Model.MontantTotal.ToString("C")</h4>
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100 btn-lg mb-2">
+                        ✅ Confirmer la commande
+                    </button>
+
+                    <a asp-controller="Panier" asp-action="Index"
+                       class="btn btn-outline-secondary w-100">
+                        ← Retour au panier
+                    </a>
+
+                    <div class="mt-3 text-center">
+                        <small class="text-muted">
+                            <i>🔒 Paiement sécurisé</i><br />
+                            <i>📦 Livraison sous 48-72h</i>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    function appliquerCodePromo() {
+        const code = document.getElementById('codePromoInput').value.trim();
+        const messageDiv = document.getElementById('messageCodePromo');
+
+        if (!code) {
+            messageDiv.innerHTML = '<div class="alert alert-warning">Veuillez entrer un code promo</div>';
+            return;
+        }
+
+        fetch('/Commandes/AppliquerCodePromo', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'codePromo=' + encodeURIComponent(code)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                messageDiv.innerHTML = '<div class="alert alert-danger">' + data.message + '</div>';
+            }
+        })
+        .catch(error => {
+            messageDiv.innerHTML = '<div class="alert alert-danger">Erreur lors de l\'application du code</div>';
+        });
+    }
+
+    function retirerCodePromo() {
+        fetch('/Commandes/SupprimerCodePromo', {
+            method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+            location.reload();
+        });
+    }
+</script>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

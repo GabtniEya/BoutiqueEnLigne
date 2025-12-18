@@ -1,0 +1,238 @@
+﻿@using System.IO
+@model BoutiqueEnLigne.ViewModels.ProduitListViewModel
+@{
+    ViewData["Title"] = "Nos Produits";
+}
+
+<h2>🛍️ Nos Produits</h2>
+<hr />
+
+<div class="row">
+    <!-- SIDEBAR FILTRES -->
+    <div class="col-md-3">
+        <div class="card mb-3">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">🔍 Filtres</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="Index" method="get" id="filterForm">
+                    <!-- Recherche -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Recherche</label>
+                        <input type="text" name="recherche" value="@Model.RechercheTexte"
+                               class="form-control" placeholder="Nom du produit..." />
+                    </div>
+
+                    <!-- Catégorie -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Catégorie</label>
+                        <select name="categorieId" class="form-select" id="categorieSelect" onchange="this.form.submit()">
+                            <option value="">Toutes les catégories</option>
+                            @foreach (var categorie in Model.Categories)
+                            {
+                                <option value="@categorie.Id"
+                                        selected="@(Model.CategorieSelectionnee == categorie.Id)">
+                                    @categorie.Nom
+                                </option>
+                            }
+                        </select>
+                    </div>
+
+                    <!-- Filtre Prix -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">💰 Prix</label>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <input type="number" name="prixMin" value="@Model.PrixMin"
+                                       class="form-control form-control-sm" placeholder="Min" step="0.01" />
+                            </div>
+                            <div class="col-6">
+                                <input type="number" name="prixMax" value="@Model.PrixMax"
+                                       class="form-control form-control-sm" placeholder="Max" step="0.01" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FILTRES DYNAMIQUES PAR CATÉGORIE -->
+                    @if (Model.FiltresDisponibles != null && Model.FiltresDisponibles.Any())
+                    {
+                        <hr />
+                        <h6 class="text-primary">Filtres Spécifiques</h6>
+
+                        @foreach (var filtre in Model.FiltresDisponibles)
+                        {
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">@filtre.NomAttribut</label>
+
+                                @if (filtre.TypeAttribut == "select")
+                                {
+                                    var valeurs = filtre.ValeursDisponibles?.Split(',') ?? new string[0];
+                                    <select name="attr_@filtre.NomAttribut" class="form-select form-select-sm">
+                                        <option value="">Tous</option>
+                                        @foreach (var valeur in valeurs)
+                                        {
+                                            var isSelected = Model.FiltresAppliques != null &&
+                                            Model.FiltresAppliques.ContainsKey(filtre.NomAttribut) &&
+                                            Model.FiltresAppliques[filtre.NomAttribut] == valeur.Trim();
+                                            <option value="@valeur.Trim()" selected="@isSelected">
+                                                @valeur.Trim()
+                                            </option>
+                                        }
+                                    </select>
+                                }
+                            </div>
+                        }
+                    }
+
+                    <!-- Tri -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Trier par</label>
+                        <select name="triPar" class="form-select form-select-sm">
+                            <option value="">Par défaut</option>
+                            <option value="prix_asc" selected="@(Model.TriPar == "prix_asc")">Prix croissant</option>
+                            <option value="prix_desc" selected="@(Model.TriPar == "prix_desc")">Prix décroissant</option>
+                            <option value="popularite" selected="@(Model.TriPar == "popularite")">Popularité</option>
+                            <option value="recent" selected="@(Model.TriPar == "recent")">Plus récents</option>
+                        </select>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            🔍 Appliquer les filtres
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                            ✕ Réinitialiser
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Filtres actifs -->
+        @if (Model.FiltresAppliques != null && Model.FiltresAppliques.Any())
+        {
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="fw-bold">Filtres actifs :</h6>
+                    @foreach (var filtre in Model.FiltresAppliques)
+                    {
+                        <span class="badge bg-info me-1 mb-1">
+                            @filtre.Key: @filtre.Value
+                        </span>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- LISTE DES PRODUITS -->
+    <div class="col-md-9">
+        @if (!Model.Produits.Any())
+        {
+            <div class="alert alert-info">
+                <h5>Aucun produit trouvé</h5>
+                <p>Essayez de modifier vos filtres de recherche.</p>
+            </div>
+        }
+        else
+        {
+            <div class="mb-3">
+                <small class="text-muted">@Model.Produits.Count produit(s) trouvé(s)</small>
+            </div>
+
+            <div class="row">
+                @foreach (var produit in Model.Produits)
+                {
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            @if (!string.IsNullOrEmpty(produit.ImageUrl))
+                            {
+                                <img src="@produit.ImageUrl" class="card-img-top" alt="@produit.Nom"
+                                     style="height: 200px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
+                                     style="height: 200px;">
+                                    <span style="font-size: 80px;">📦</span>
+                                </div>
+                            }
+                            <div class="card-body">
+                                <h5 class="card-title">@produit.Nom</h5>
+                                <p class="card-text text-muted">@produit.Categorie.Nom</p>
+
+                                <!-- Afficher les attributs principaux -->
+                                @if (produit.Attributs != null && produit.Attributs.Any())
+                                {
+                                    <div class="mb-2">
+                                        @foreach (var attr in produit.Attributs.Take(2))
+                                        {
+                                            <small class="badge bg-light text-dark me-1">
+                                                @attr.NomAttribut: @attr.ValeurAttribut
+                                            </small>
+                                        }
+                                    </div>
+                                }
+
+                                <p class="card-text">
+                                    @if (produit.Description.Length > 80)
+                                    {
+                                        @(produit.Description.Substring(0, 80) + "...")
+                                    }
+                                    else
+                                    {
+                                        @produit.Description
+                                    }
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="h4 text-primary mb-0">@produit.Prix.ToString("C")</span>
+                                    <span class="text-muted">
+                                        <small>👁️ @produit.NombreVues vues</small>
+                                    </span>
+                                </div>
+                                <p class="mt-2">
+                                    @if (produit.Stock > 0)
+                                    {
+                                        <span class="badge bg-success">En stock (@produit.Stock)</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Rupture de stock</span>
+                                    }
+                                </p>
+                            </div>
+                            <div class="card-footer bg-white">
+                                <a asp-action="Details" asp-route-id="@produit.Id"
+                                   class="btn btn-outline-primary w-100">Voir détails</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Pagination -->
+            @if (Model.TotalPages > 1)
+            {
+                <nav aria-label="Navigation pagination">
+                    <ul class="pagination justify-content-center">
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            <li class="page-item @(i == Model.PageActuelle ? "active" : "")">
+                                <a class="page-link"
+                                   asp-action="Index"
+                                   asp-route-page="@i"
+                                   asp-route-categorieId="@Model.CategorieSelectionnee"
+                                   asp-route-recherche="@Model.RechercheTexte"
+                                   asp-route-triPar="@Model.TriPar"
+                                   asp-route-prixMin="@Model.PrixMin"
+                                   asp-route-prixMax="@Model.PrixMax">
+                                    @i
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            }
+        }
+    </div>
+</div>

@@ -1,0 +1,160 @@
+﻿@model BoutiqueEnLigne.ViewModels.InscriptionViewModel
+@{
+    ViewData["Title"] = "Inscription";
+}
+
+<style>
+    .auth-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        margin: -20px -15px;
+        padding: 40px 15px;
+    }
+
+    .auth-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        overflow: hidden;
+        max-width: 700px;
+        width: 100%;
+    }
+
+    .auth-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+    }
+
+        .auth-header h2 {
+            margin: 0;
+            font-weight: 600;
+            color: white;
+        }
+
+    .auth-body {
+        padding: 40px;
+    }
+
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+
+    .btn-auth {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 12px;
+        font-weight: 600;
+        border-radius: 10px;
+        transition: transform 0.3s;
+    }
+
+        .btn-auth:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+
+    .auth-link {
+        color: #667eea;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+        .auth-link:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+</style>
+
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h2>📝 Créer un compte</h2>
+            <p class="mb-0">Rejoignez notre boutique en ligne</p>
+        </div>
+
+        <div class="auth-body">
+            <form asp-action="Inscription" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Nom" class="form-label">Nom *</label>
+                        <input asp-for="Nom" class="form-control" placeholder="Votre nom" />
+                        <span asp-validation-for="Nom" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Prenom" class="form-label">Prénom *</label>
+                        <input asp-for="Prenom" class="form-control" placeholder="Votre prénom" />
+                        <span asp-validation-for="Prenom" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">Email *</label>
+                    <input asp-for="Email" class="form-control" type="email" placeholder="votre@email.com" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="MotDePasse" class="form-label">Mot de passe *</label>
+                        <input asp-for="MotDePasse" class="form-control" type="password" placeholder="••••••••" />
+                        <span asp-validation-for="MotDePasse" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="ConfirmMotDePasse" class="form-label">Confirmer *</label>
+                        <input asp-for="ConfirmMotDePasse" class="form-control" type="password" placeholder="••••••••" />
+                        <span asp-validation-for="ConfirmMotDePasse" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Telephone" class="form-label">Téléphone</label>
+                    <input asp-for="Telephone" class="form-control" placeholder="0612345678" />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Adresse" class="form-label">Adresse</label>
+                    <input asp-for="Adresse" class="form-control" placeholder="10 rue de la République" />
+                </div>
+
+                <div class="row">
+                    <div class="col-md-8 mb-3">
+                        <label asp-for="Ville" class="form-label">Ville</label>
+                        <input asp-for="Ville" class="form-control" placeholder="Paris" />
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="CodePostal" class="form-label">Code Postal</label>
+                        <input asp-for="CodePostal" class="form-control" placeholder="75001" />
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-auth btn-lg">S'inscrire</button>
+                </div>
+
+                <div class="text-center mt-4">
+                    <p class="mb-0">
+                        Vous avez déjà un compte ?
+                        <a asp-action="Connexion" class="auth-link">Se connecter</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
