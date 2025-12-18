@@ -10,7 +10,7 @@ Visual Studio 2022 (ou VS Code)
 
 🚀 Installation Rapide
 1. Cloner le projet
-bashgit clone https://github.com/votre-username/BoutiqueEnLigne.git
+bashgit clone https://github.com/GabtniEya/BoutiqueEnLigne.git
 cd BoutiqueEnLigne
 2. Configurer la base de données
 Ouvrez appsettings.json et modifiez la chaîne de connexion :
